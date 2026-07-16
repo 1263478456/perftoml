@@ -1,17 +1,28 @@
 # sc-commit: init
 # ============================================================
-#  All-in-One: subconverter + 自定义前端 + Nginx
-#  前端为纯 HTML/JS，无任何框架依赖
+#  SubConverter-Extended + 自定义前端 + Nginx
 # ============================================================
 
-# ---- Stage 1: 基于 SubConverter-Extended 镜像 ----
-FROM aethersailor/subconverter-extended:latest
+# ---- Stage 1: 从 Extended 镜像提取后端 ----
+FROM aethersailor/subconverter-extended:latest AS backend
+
+# ---- Stage 2: 干净的 Alpine 基础 ----
+FROM alpine:3.20
 
 LABEL maintainer="lyb69177116"
 LABEL description="SubConverter-Extended + lightweight frontend"
 LABEL org.opencontainers.image.source="https://github.com/1263478456/sub-converter"
 
-RUN apk add --no-cache nginx supervisor
+RUN apk add --no-cache nginx supervisor ca-certificates tzdata curl
+
+# ---- 从 Extended 镜像拷贝二进制和依赖 ----
+COPY --from=backend /usr/bin/subconverter /usr/bin/subconverter
+COPY --from=backend /usr/lib/libmihomo.so /usr/lib/libmihomo.so
+COPY --from=backend /base/ /base/
+RUN chmod +x /usr/bin/subconverter
+
+# ---- 设置库路径 ----
+ENV LD_LIBRARY_PATH="/lib:/usr/lib:/lib64:/usr/lib64"
 
 # ---- 自定义前端 ----
 COPY index.html /usr/share/nginx/html/index.html
@@ -29,8 +40,6 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 # ---- Supervisor 配置 ----
 COPY supervisord.conf /etc/supervisord.conf
-
-ENTRYPOINT []
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -sf http://localhost:80/version || exit 1
