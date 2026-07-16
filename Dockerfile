@@ -1,18 +1,11 @@
 # sc-commit: init
 # ============================================================
 #  SubConverter-Extended + 自定义前端 + Nginx
-#  基于 Extended 镜像，用 shell 脚本管理进程（不依赖 supervisor/Python）
 # ============================================================
 
 # ---- Stage 1: 从干净 Alpine 提取 nginx ----
 FROM alpine:3.20 AS nginx-src
-RUN apk add --no-cache nginx && \
-    mkdir -p /out && \
-    cp -a /usr/sbin/nginx /out/ && \
-    cp -a /etc/nginx /out/etc_nginx && \
-    cp -a /usr/lib/nginx /out/lib_nginx && \
-    cp -a /var/lib/nginx /out/var_lib_nginx && \
-    cp -a /usr/share/nginx/html /out/html
+RUN apk add --no-cache nginx
 
 # ---- Stage 2: 基于 Extended 镜像 ----
 FROM aethersailor/subconverter-extended:latest
@@ -21,14 +14,13 @@ LABEL maintainer="lyb69177116"
 LABEL description="SubConverter-Extended + lightweight frontend"
 LABEL org.opencontainers.image.source="https://github.com/1263478456/sub-converter"
 
-# 从 Stage 1 拷贝 nginx
-COPY --from=nginx-src /out/nginx /usr/sbin/nginx
-COPY --from=nginx-src /out/etc_nginx /etc/nginx
-COPY --from=nginx-src /out/lib_nginx /usr/lib/nginx
-COPY --from=nginx-src /out/var_lib_nginx /var/lib/nginx
-COPY --from=nginx-src /out/html /usr/share/nginx/html
+# 从 Stage 1 拷贝整个 nginx 相关目录
+COPY --from=nginx-src /usr/sbin/nginx /usr/sbin/nginx
+COPY --from=nginx-src /etc/nginx /etc/nginx
+COPY --from=nginx-src /usr/lib/nginx /usr/lib/nginx
+COPY --from=nginx-src /usr/share/nginx /usr/share/nginx
 
-RUN mkdir -p /var/log/nginx /run/nginx /tmp/nginx
+RUN mkdir -p /var/log/nginx /run/nginx /tmp/nginx /var/lib/nginx/tmp /var/lib/nginx/logs
 
 # ---- 自定义前端 ----
 COPY index.html /usr/share/nginx/html/index.html
