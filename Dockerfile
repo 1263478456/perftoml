@@ -21,6 +21,9 @@ RUN apk add --no-cache nginx supervisor
 # ---- 拷贝前端静态文件 ----
 COPY --from=frontend /usr/share/nginx/html/ /usr/share/nginx/html/
 
+# ---- 使用官方默认配置 ----
+RUN cp /base/pref.example.ini /base/pref.ini
+
 # ---- 注入前端补丁 ----
 COPY patch.js /usr/share/nginx/html/patch.js
 RUN sed -i 's|</head>|<script src="/patch.js"></script></head>|' \
