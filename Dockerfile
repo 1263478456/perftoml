@@ -27,6 +27,23 @@ COPY --from=nginx-src /lib/libz.so.1 /opt/nginx/lib/libz.so.1
 COPY --from=nginx-src /lib/libcrypto.so.3 /opt/nginx/lib/libcrypto.so.3
 COPY --from=nginx-src /lib/libssl.so.3 /opt/nginx/lib/libssl.so.3
 
+# 从 Alpine 拷贝 curl（Extended 镜像没有包管理器）
+COPY --from=nginx-src /usr/bin/curl /opt/tools/curl
+COPY --from=nginx-src /usr/lib/libcurl.so.4 /opt/tools/libcurl.so.4
+COPY --from=nginx-src /lib/ld-musl-x86_64.so.1 /opt/tools/ld-musl-x86_64.so.1
+COPY --from=nginx-src /lib/libz.so.1 /opt/tools/libz.so.1
+COPY --from=nginx-src /usr/lib/libssl.so.3 /opt/tools/libssl.so.3
+COPY --from=nginx-src /usr/lib/libcrypto.so.3 /opt/tools/libcrypto.so.3
+# curl 依赖 ca-certificates 的证书文件
+COPY --from=nginx-src /etc/ssl/certs/ca-certificates.crt /opt/tools/ca-certificates.crt
+
+# 创建 curl 包装脚本
+RUN printf '#!/bin/sh\n\
+export SSL_CERT_FILE=/opt/tools/ca-certificates.crt\n\
+exec /opt/tools/ld-musl-x86_64.so.1 --library-path /opt/tools /opt/tools/curl "$@"\n\
+' > /usr/local/bin/curl && \
+    chmod +x /usr/local/bin/curl
+
 RUN mkdir -p /var/log/nginx /run/nginx /tmp/nginx /var/lib/nginx/tmp /var/lib/nginx/logs
 
 # ---- 创建 nginx 包装脚本（用 musl 链接器运行，指定配置文件路径） ----
@@ -47,9 +64,6 @@ COPY nginx.conf /opt/nginx/etc/nginx/nginx.conf
 # ---- 启动脚本 ----
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
-
-# ---- 安装 curl（健康检查 + subconverter 就绪检测需要） ----
-RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT []
 
