@@ -27,11 +27,11 @@ COPY --from=nginx-src /lib/libz.so.1 /opt/nginx/lib/libz.so.1
 COPY --from=nginx-src /lib/libcrypto.so.3 /opt/nginx/lib/libcrypto.so.3
 COPY --from=nginx-src /lib/libssl.so.3 /opt/nginx/lib/libssl.so.3
 
-RUN mkdir -p /var/log/nginx /run/nginx /tmp/nginx /var/lib/nginx/tmp
+RUN mkdir -p /var/log/nginx /run/nginx /tmp/nginx /var/lib/nginx/tmp /var/lib/nginx/logs
 
-# ---- 创建 nginx 包装脚本（用 musl 链接器运行） ----
+# ---- 创建 nginx 包装脚本（用 musl 链接器运行，指定配置文件路径） ----
 RUN printf '#!/bin/sh\n\
-exec /opt/nginx/lib/ld-musl-x86_64.so.1 --library-path /opt/nginx/lib:/opt/nginx/usr/lib /opt/nginx/usr/sbin/nginx "$@"\n\
+exec /opt/nginx/lib/ld-musl-x86_64.so.1 --library-path /opt/nginx/lib:/opt/nginx/usr/lib /opt/nginx/usr/sbin/nginx -c /opt/nginx/etc/nginx/nginx.conf "$@"\n\
 ' > /usr/local/bin/nginx && \
     chmod +x /usr/local/bin/nginx
 
@@ -47,6 +47,9 @@ COPY nginx.conf /opt/nginx/etc/nginx/nginx.conf
 # ---- 启动脚本 ----
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
+
+# ---- 安装 curl（健康检查 + subconverter 就绪检测需要） ----
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT []
 
