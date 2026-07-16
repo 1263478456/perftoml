@@ -30,10 +30,10 @@ COPY index.html /usr/share/nginx/html/index.html
 # ---- 配置文件放到二进制旁边 ----
 RUN cp /base/pref.example.toml /usr/bin/pref.toml && \
     cp -r /base/base /usr/bin/base && \
-    cp -r /base/snippets /usr/bin/snippets && \
-    cp -r /base/config /usr/bin/config && \
-    cp -r /base/profiles /usr/bin/profiles && \
-    cp -r /base/rules /usr/bin/rules
+    cp -r /base/snippets /usr/bin/snippets 2>/dev/null || true && \
+    cp -r /base/config /usr/bin/config 2>/dev/null || true && \
+    cp -r /base/profiles /usr/bin/profiles 2>/dev/null || true && \
+    cp -r /base/rules /usr/bin/rules 2>/dev/null || true
 
 # ---- Nginx 配置 ----
 COPY nginx.conf /etc/nginx/nginx.conf
