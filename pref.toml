@@ -1,7 +1,7 @@
 # ============================================================
-#  SubConverter-Extended 完整配置
-#  外部配置：ACL4SSR_Online_Full_MultiMode（全分组多模式）
-#  适用于内网自用部署
+#  SubConverter-Extended 配置
+#  外部配置：ACL4SSR_Online_Full_MultiMode
+#  额外规则集：ACL4SSR 全部规则
 # ============================================================
 
 version = 1
@@ -12,15 +12,11 @@ enable_insert = true
 insert_url = []
 prepend_insert_url = true
 
-# 排除过期/流量/广告节点
 exclude_remarks = ["(到期|剩余流量|时间|官网|产品|平台|套餐|过期|联系|客服|续费|网址|channel)"]
 
-# 外部配置：ACL4SSR 全分组多模式（包含全部策略组 + 规则集）
 default_external_config = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_MultiMode.ini"
-
 base_path = "base"
 
-# 各客户端基础模板
 clash_rule_base = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/GeneralClashConfig.yml"
 surge_rule_base = "https://raw.githubusercontent.com/DivineEngine/Profiles/master/Surge/G.conf"
 surfboard_rule_base = "https://raw.githubusercontent.com/DivineEngine/Profiles/master/Surge/G.conf"
@@ -33,7 +29,6 @@ singbox_rule_base = ""
 proxy_config = "NONE"
 proxy_ruleset = "NONE"
 proxy_subscription = "NONE"
-
 append_proxy_type = false
 reload_conf_on_request = false
 
@@ -85,7 +80,6 @@ config_update_strict = false
 quanx_device_id = ""
 
 [surge_external_proxy]
-#surge_ssr_path = "/usr/bin/ssr-local"
 resolve_hostname = true
 
 [security]
@@ -181,6 +175,703 @@ emoji = '🇳🇱'
 match = '(全球|国际|Global|Overseas|海外)'
 emoji = '🌍'
 
+# ---- ACL4SSR 全部规则集 ----
+
+[ruleset]
+enabled = true
+overwrite_original_rules = true
+update_ruleset_on_request = false
+
+# ============ 🎯 直连规则 ============
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/UnBan.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/GoogleCN.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleCNProxyIP.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/SteamCN.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaMedia.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Download.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ChinaDNS.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/CN.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ChinaNet.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AccelerateDirectSites.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Google.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Baidu.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Alibaba.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Tencent.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Bilibili.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/BilibiliHMT.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Iqiyi.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Youku.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Mgtv.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Douyu.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Douyin.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ByteDance.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/HuaWei.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Heytap.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/DiDi.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Iflytek.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ChinaOneKeyLogin.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Docker.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 🛑 拦截规则 ============
+
+[[rulesets]]
+group = "🛑 广告拦截"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🛑 广告拦截"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🛑 广告拦截"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanEasyList.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🛑 广告拦截"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanEasyListChina.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🛑 广告拦截"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanEasyPrivacy.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 💬 通讯社交 ============
+
+[[rulesets]]
+group = "📲 电报消息"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Telegram.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 Ai平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AI.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 Ai平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/OpenAI.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 Ai平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Claude.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 Ai平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ClaudeAI.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 Ai平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Gemini.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 通讯社交"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Facebook.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 通讯社交"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Instagram.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 通讯社交"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Twitter.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 通讯社交"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Discord.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 通讯社交"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Reddit.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 通讯社交"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Medium.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 通讯社交"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Quora.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💬 通讯社交"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Pixiv.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 📹 流媒体 ============
+
+[[rulesets]]
+group = "📹 油管视频"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/YouTube.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎥 奈飞视频"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Netflix.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 巴哈姆特"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Bahamut.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 哔哩哔哩"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Bilibili.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 哔哩哔哩"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/BilibiliHMT.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🌍 国外媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyMedia.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🌏 国内媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaMedia.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/DisneyPlus.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/HBO.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/HBO_GO_HKG.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Hulu.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/HuluJapan.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/DAZN.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/DiscoveryPlus.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AbemaTV.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/All4.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/BBC.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/BBCiPlayer.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ITV.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/FoxNow.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📺 流媒体"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/EncoreTVB.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎵 音乐解锁"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/NetEaseMusic.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎵 音乐解锁"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Spotify.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎵 音乐解锁"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Deezer.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎵 音乐解锁"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AppleMusic.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ Ⓜ️ 微软/苹果 ============
+
+[[rulesets]]
+group = "Ⓜ️ 微软服务"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Microsoft.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "Ⓜ️ 微软Bing"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Bing.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "Ⓜ️ 微软云盘"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/OneDrive.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🍎 苹果服务"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Apple.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🍎 苹果服务"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AppleNews.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🍎 苹果服务"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AppleTV.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 🎮 游戏平台 ============
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Steam.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Epic.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Origin.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Sony.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Nintendo.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Blizzard.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GameDownload.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/F1.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🎮 游戏平台"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Xbox.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 🔧 开发者/工具 ============
+
+[[rulesets]]
+group = "🔧 开发者"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Github.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🔧 开发者"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Developer.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🔧 开发者"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Adobe.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 📢 谷歌FCM ============
+
+[[rulesets]]
+group = "📢 谷歌FCM"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleFCM.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 🛒 电商/金融 ============
+
+[[rulesets]]
+group = "🛒 电商"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Amazon.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🛒 电商"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/AmazonIp.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💰 加密货币"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Crypto.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "💰 加密货币"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Binance.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 📰 其他 ============
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/360.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/4399.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ABC.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Dmm.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Dubox.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/EHGallery.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/GoogleEarth.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/HWTV.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "📰 其他"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/CCTV.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ 🐟 漏网之鱼 ============
+
+[[rulesets]]
+group = "🚀 节点选择"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyGFWlist.list"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🐟 漏网之鱼"
+ruleset = "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/ProxyLite.list"
+type = "surge-ruleset"
+interval = 86400
+
+# ============ GEOIP + FINAL ============
+
+[[rulesets]]
+group = "🎯 全球直连"
+ruleset = "[]GEOIP,CN"
+type = "surge-ruleset"
+interval = 86400
+
+[[rulesets]]
+group = "🐟 漏网之鱼"
+ruleset = "[]FINAL"
+type = "surge-ruleset"
+interval = 86400
+
 # ---- API 别名 ----
 
 [[aliases]]
@@ -188,16 +879,8 @@ uri = "/clash"
 target = "/sub?target=clash"
 
 [[aliases]]
-uri = "/clashr"
-target = "/sub?target=clashr"
-
-[[aliases]]
 uri = "/surge"
 target = "/sub?target=surge"
-
-[[aliases]]
-uri = "/quan"
-target = "/sub?target=quan"
 
 [[aliases]]
 uri = "/quanx"
@@ -208,20 +891,12 @@ uri = "/loon"
 target = "/sub?target=loon"
 
 [[aliases]]
-uri = "/surfboard"
-target = "/sub?target=surfboard"
-
-[[aliases]]
 uri = "/singbox"
 target = "/sub?target=singbox"
 
 [[aliases]]
 uri = "/ss"
 target = "/sub?target=ss"
-
-[[aliases]]
-uri = "/ssr"
-target = "/sub?target=ssr"
 
 [[aliases]]
 uri = "/v2ray"
@@ -264,7 +939,7 @@ value = "true"
 key = "singbox.mixed_port"
 value = "2080"
 
-# ---- 服务端配置 ----
+# ---- 服务端 ----
 
 [server]
 listen = "0.0.0.0"
@@ -277,7 +952,7 @@ print_debug_info = false
 max_pending_connections = 10240
 max_concurrent_threads = 16
 max_server_threads = 128
-max_allowed_rulesets = 64
+max_allowed_rulesets = 128
 max_allowed_rules = 0
 max_allowed_download_size = 0
 enable_cache = true
