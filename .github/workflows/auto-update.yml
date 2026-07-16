@@ -48,7 +48,7 @@ jobs:
       - name: Check sub-web upstream
         id: check_sw
         run: |
-          LATEST=$(curl -sfL https://api.github.com/repos/CareyWang/sub-web/commits/main \
+          LATEST=$(curl -sfL https://api.github.com/repos/CareyWang/sub-web/commits/master \
             | jq -r '.sha[0:7]')
           CURRENT=$(grep '# subweb-commit:' Dockerfile 2>/dev/null \
             | head -1 | sed 's/.*: //' || echo "unknown")
