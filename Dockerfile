@@ -40,7 +40,8 @@ RUN apk add --no-cache \
     yaml-cpp \
     libevent \
     pcre2 \
-    brotli
+    brotli \
+    sed
 
 # ---- 从 builder 拷贝编译产物 ----
 COPY --from=builder /src/subconverter /opt/subconverter/subconverter
@@ -49,6 +50,12 @@ RUN chmod +x /opt/subconverter/subconverter
 
 # ---- 拷贝前端静态文件 ----
 COPY --from=frontend /usr/share/nginx/html/ /usr/share/nginx/html/
+
+# ---- 修正前端默认后端地址 ----
+# sub-web 默认指向 api.wcc.best（作者公共后端）
+# 替换为相对路径 /sub?，走 Nginx 代理到本地后端
+RUN find /usr/share/nginx/html -name '*.js' -exec \
+    sed -i 's|https://api\.wcc\.best||g' {} \;
 
 # ---- 拷贝自定义配置（覆盖默认） ----
 COPY subconverter/pref.ini /opt/subconverter/base/pref.ini
