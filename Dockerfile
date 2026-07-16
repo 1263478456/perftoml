@@ -18,12 +18,6 @@ LABEL org.opencontainers.image.source="https://github.com/1263478456/sub-convert
 # ---- 安装 Nginx + Supervisor ----
 RUN apk add --no-cache nginx supervisor
 
-# ---- 确保配置文件存在 ----
-# 二进制会自动从 example 复制，但为保险起见手动确保
-RUN cd /base && \
-    [ -f pref.ini ] || [ -f pref.toml ] || [ -f pref.yml ] || \
-    cp pref.example.yml pref.yml
-
 # ---- 拷贝前端静态文件 ----
 COPY --from=frontend /usr/share/nginx/html/ /usr/share/nginx/html/
 
