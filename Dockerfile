@@ -23,8 +23,12 @@ COPY --from=frontend /usr/share/nginx/html/ /usr/share/nginx/html/
 
 # ---- 把配置文件放到二进制旁边 ----
 # subconverter 启动时 chdir 到自己所在目录（/usr/bin/），在那里找配置文件
-RUN cp /base/pref.example.yml /usr/bin/pref.yml
-RUN cp -r /base/base /usr/bin/base
+RUN cp /base/pref.example.yml /usr/bin/pref.yml && \
+    cp -r /base/base /usr/bin/base && \
+    cp -r /base/snippets /usr/bin/snippets && \
+    cp -r /base/config /usr/bin/config && \
+    cp -r /base/profiles /usr/bin/profiles && \
+    cp -r /base/rules /usr/bin/rules
 
 # ---- 注入前端补丁 ----
 COPY patch.js /usr/share/nginx/html/patch.js
