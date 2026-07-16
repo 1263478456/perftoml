@@ -21,12 +21,6 @@ RUN apk add --no-cache nginx supervisor sed
 # ---- 拷贝前端静态文件 ----
 COPY --from=frontend /usr/share/nginx/html/ /usr/share/nginx/html/
 
-# ---- 修正前端默认后端地址 ----
-# sub-web 默认指向 api.wcc.best（作者公共后端）
-# 替换为空，使后端地址变为 /sub?（相对路径，走 Nginx 代理到本地后端）
-RUN find /usr/share/nginx/html -name '*.js' -exec \
-    sed -i 's|https://api\.wcc\.best||g' {} \;
-
 # ---- 拷贝自定义配置（覆盖默认） ----
 COPY subconverter/pref.ini /base/pref.ini
 COPY subconverter/config/ /base/config/
@@ -40,7 +34,7 @@ COPY supervisord.conf /etc/supervisord.conf
 # ---- 清理默认 entrypoint，改用 supervisor ----
 ENTRYPOINT []
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start_period=10s --retries=3 \
     CMD curl -sf http://localhost:80/version || exit 1
 
 EXPOSE 80
