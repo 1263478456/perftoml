@@ -17,11 +17,6 @@ services:
     restart: unless-stopped
     ports:
       - "${PORT:-8080}:80"
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
 
   # ==========================================================
   #  方式二：分拆模式（取消注释使用，同时注释上方 All-in-One）

@@ -24,11 +24,6 @@ services:
     restart: unless-stopped
     ports:
       - "8080:80"
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
 ```
 
 ```bash
@@ -82,11 +77,6 @@ services:
       - "8080:80"
     volumes:
       - ./pref.ini:/opt/subconverter/base/pref.ini:ro
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-          cpus: '0.5'
 ```
 
 ## 🏗️ 本地构建
