@@ -1,15 +1,13 @@
 // ============================================================
-//  sub-web 前端补丁（兼容 Vue 2）
-//  MutationObserver 持续拦截 + 精确删除
+//  sub-web 前端补丁
+//  元素移除已在构建时用 sed 完成，这里只做功能增强
 // ============================================================
 
 (function () {
   "use strict";
 
   var ACL4SSR_CONFIGS = [
-    {
-      label: "ACL4SSR",
-      options: [
+    { label: "ACL4SSR", options: [
         { label: "ACL4SSR_Online 默认版 分组比较全", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online.ini" },
         { label: "ACL4SSR_Online_Mini 精简版 带港美日国家", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini.ini" },
         { label: "ACL4SSR_Online_Full 全分组 重度用户使用", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full.ini" },
@@ -20,8 +18,7 @@
         { label: "ACL4SSR_Online_Full_Google 全分组 谷歌细分", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Google.ini" },
         { label: "ACL4SSR_Online_Mini_MultiCountry 精简版 多国分组", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiCountry.ini" },
         { label: "ACL4SSR_Online_MultiPlatform 多平台版", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_MultiPlatform.ini" },
-      ],
-    },
+    ]},
     { label: "default", options: [
         { label: "No-Urltest", value: "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/universal/no-urltest.ini" },
         { label: "Urltest", value: "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/universal/urltest.ini" },
@@ -44,61 +41,11 @@
     { label: "Quantumult X/1.0.0", value: "Quantumult%20X/1.0.0" },
     { label: "Surge/5.0", value: "Surge/5.0" },
     { label: "Shadowrocket", value: "Shadowrocket" },
-    { label: "V2Box/1.0", value: "V2Box/1.0" },
-    { label: "Stash/1.0", value: "Stash/1.0" },
   ];
 
   var STORAGE_KEY_UA = "sub-converter-custom-ua";
   function getUA() { try { return localStorage.getItem(STORAGE_KEY_UA) || ""; } catch (e) { return ""; } }
   function saveUA(v) { try { localStorage.setItem(STORAGE_KEY_UA, v); } catch (e) {} }
-
-  // ---- 防重入标志 ----
-  var cleaning = false;
-
-  // ---- 持续清理 ----
-  function startCleaner() {
-    var REMOVE_LABELS = ["后端地址", "订阅短链"];
-
-    function clean() {
-      if (cleaning) return;
-      cleaning = true;
-
-      // 1. 移除匹配标签的 form-item
-      document.querySelectorAll(".el-form-item__label").forEach(function (label) {
-        var text = (label.textContent || "").trim();
-        for (var i = 0; i < REMOVE_LABELS.length; i++) {
-          if (text.indexOf(REMOVE_LABELS[i]) !== -1) {
-            var item = label.closest(".el-form-item");
-            if (item && item.parentNode) {
-              item.parentNode.removeChild(item);
-            }
-            break;
-          }
-        }
-      });
-
-      // 2. 精确移除「生成短链接」按钮（只删按钮本身，不删父容器）
-      document.querySelectorAll("button").forEach(function (btn) {
-        if ((btn.textContent || "").indexOf("生成短链接") !== -1) {
-          btn.parentNode.removeChild(btn);
-        }
-      });
-
-      cleaning = false;
-    }
-
-    clean();
-
-    var observer = new MutationObserver(function (mutations) {
-      for (var i = 0; i < mutations.length; i++) {
-        if (mutations[i].addedNodes.length > 0) {
-          clean();
-          return;
-        }
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  }
 
   // ---- 注入自定义UA ----
   function injectUA() {
@@ -150,36 +97,26 @@
   }
 
   // ---- 拦截订阅链接追加 ua ----
-  function interceptUA() {
-    new MutationObserver(function () {
-      var ua = getUA();
-      if (!ua) return;
-      document.querySelectorAll("input[disabled], textarea[disabled]").forEach(function (el) {
-        var v = el.value;
-        if (v && v.indexOf("/sub?") !== -1 && v.indexOf("ua=") === -1) {
-          el.value = v + "&ua=" + encodeURIComponent(ua);
-          el.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-      });
-    }).observe(document.body, { childList: true, subtree: true, characterData: true });
-  }
+  new MutationObserver(function () {
+    var ua = getUA();
+    if (!ua) return;
+    document.querySelectorAll("input[disabled], textarea[disabled]").forEach(function (el) {
+      var v = el.value;
+      if (v && v.indexOf("/sub?") !== -1 && v.indexOf("ua=") === -1) {
+        el.value = v + "&ua=" + encodeURIComponent(ua);
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    });
+  }).observe(document.body, { childList: true, subtree: true, characterData: true });
 
   // ---- 启动 ----
-  function init() {
-    startCleaner();
-    patchConfig();
-    interceptUA();
-  }
-
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
-      setTimeout(init, 300);
-      setTimeout(injectUA, 1000);
-      setTimeout(injectUA, 2000);
+      setTimeout(function () { injectUA(); patchConfig(); }, 500);
+      setTimeout(injectUA, 1500);
     });
   } else {
-    setTimeout(init, 300);
-    setTimeout(injectUA, 1000);
-    setTimeout(injectUA, 2000);
+    setTimeout(function () { injectUA(); patchConfig(); }, 500);
+    setTimeout(injectUA, 1500);
   }
 })();
