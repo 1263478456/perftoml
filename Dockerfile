@@ -2,7 +2,7 @@
 # subweb-commit: init
 # ============================================================
 #  All-in-One: subconverter + sub-web + Nginx
-#  基于官方 subconverter 镜像，添加 Nginx + 前端
+#  基于官方 subconverter 镜像，添加 Nginx + 前端 + 前端补丁
 # ============================================================
 
 # ---- Stage 1: 获取 sub-web 前端编译产物 ----
@@ -21,13 +21,17 @@ RUN apk add --no-cache nginx supervisor
 # ---- 拷贝前端静态文件 ----
 COPY --from=frontend /usr/share/nginx/html/ /usr/share/nginx/html/
 
+# ---- 注入前端补丁 ----
+COPY patch.js /usr/share/nginx/html/patch.js
+RUN sed -i 's|</head>|<script src="/patch.js"></script></head>|' \
+    /usr/share/nginx/html/index.html
+
 # ---- Nginx 配置 ----
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # ---- Supervisor 配置 ----
 COPY supervisord.conf /etc/supervisord.conf
 
-# ---- 清理默认 entrypoint，改用 supervisor ----
 ENTRYPOINT []
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
