@@ -4,19 +4,38 @@
 
 ## 🚀 快速开始
 
-```bash
-docker run -d --restart=always -p 8080:80 1263478456/sub-converter:latest
-```
-
-访问 `http://your-server:8080`
-
-### Docker Compose
+### Docker Compose（推荐）
 
 ```bash
 git clone https://github.com/1263478456/sub-converter.git
 cd sub-converter
 docker-compose up -d
 ```
+
+或直接创建 `docker-compose.yml`：
+
+```yaml
+version: '3.8'
+
+services:
+  sub-converter:
+    image: 1263478456/sub-converter:latest
+    container_name: sub-converter
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+```
+
+```bash
+docker-compose up -d
+```
+
+访问 `http://your-server:8080`
 
 ## 📦 镜像说明
 
@@ -53,10 +72,21 @@ PORT=8080
 
 修改 `subconverter/pref.ini` 后重新构建镜像，或用 volume 挂载：
 
-```bash
-docker run -d -p 8080:80 \
-  -v /path/to/pref.ini:/opt/subconverter/base/pref.ini:ro \
-  1263478456/sub-converter:latest
+```yaml
+services:
+  sub-converter:
+    image: 1263478456/sub-converter:latest
+    container_name: sub-converter
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./pref.ini:/opt/subconverter/base/pref.ini:ro
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
 ```
 
 ## 🏗️ 本地构建
