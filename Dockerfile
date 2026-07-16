@@ -43,7 +43,7 @@ COPY supervisord.conf /etc/supervisord.conf
 
 ENTRYPOINT []
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -sf http://localhost:80/version || exit 1
 
 EXPOSE 80
