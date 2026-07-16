@@ -2,6 +2,7 @@
 //  sub-web 前端补丁（兼容 Vue 2）
 //  1. 去掉「后端地址」输入框
 //  2. 替换远程配置列表为 ACL4SSR 完整规则集
+//  3. 添加「自定义UA」输入框，拼入订阅链接
 // ============================================================
 
 (function () {
@@ -75,7 +76,29 @@
     },
   ];
 
-  // ---- 延迟执行，确保 Vue 已渲染 ----
+  // ---- 常用 UA 预设 ----
+  var UA_PRESETS = [
+    { label: "clash.meta", value: "clash.meta" },
+    { label: "ClashForAndroid/2.5.12", value: "ClashForAndroid/2.5.12" },
+    { label: "ClashX Pro/1.90.0", value: "ClashX Pro/1.90.0" },
+    { label: "Quantumult%20X/1.0.0", value: "Quantumult%20X/1.0.0" },
+    { label: "Surge/5.0", value: "Surge/5.0" },
+    { label: "Shadowrocket", value: "Shadowrocket" },
+    { label: "V2Box/1.0", value: "V2Box/1.0" },
+    { label: "Stash/1.0", value: "Stash/1.0" },
+  ];
+
+  var STORAGE_KEY_UA = "sub-converter-custom-ua";
+
+  // ---- 获取/保存 UA ----
+  function getCustomUA() {
+    try { return localStorage.getItem(STORAGE_KEY_UA) || ""; } catch (e) { return ""; }
+  }
+  function saveCustomUA(ua) {
+    try { localStorage.setItem(STORAGE_KEY_UA, ua); } catch (e) {}
+  }
+
+  // ---- 主补丁函数 ----
   function patch() {
     // 1. 隐藏「后端地址」输入框
     var labels = document.querySelectorAll(".el-form-item__label");
@@ -86,42 +109,67 @@
       }
     });
 
-    // 2. 查找 Vue 实例并替换远程配置
+    // 2. 注入「自定义UA」输入框（插入到「远程配置」后面）
+    if (!document.getElementById("custom-ua-field")) {
+      var remoteConfigLabel = null;
+      labels.forEach(function (label) {
+        if (label.textContent && label.textContent.indexOf("远程配置") !== -1) {
+          remoteConfigLabel = label;
+        }
+      });
+      if (remoteConfigLabel) {
+        var remoteFormItem = remoteConfigLabel.closest(".el-form-item");
+        if (remoteFormItem) {
+          var uaDiv = document.createElement("div");
+          uaDiv.id = "custom-ua-field";
+          uaDiv.className = "el-form-item";
+          uaDiv.style.marginBottom = "18px";
+
+          var savedUA = getCustomUA();
+
+          // 构建预设下拉 + 输入框 HTML
+          var presetOptions = UA_PRESETS.map(function (p) {
+            return '<option value="' + p.value + '">' + p.label + "</option>";
+          }).join("");
+
+          uaDiv.innerHTML =
+            '<label class="el-form-item__label" style="width:140px;float:left;line-height:36px;padding:0 12px 0 0;box-sizing:border-box;">自定义UA:</label>' +
+            '<div class="el-form-item__content" style="margin-left:140px;">' +
+              '<div style="display:flex;gap:8px;">' +
+                '<select id="ua-preset-select" class="el-input__inner" style="width:200px;height:36px;">' +
+                  '<option value="">预设选择</option>' +
+                  presetOptions +
+                '</select>' +
+                '<input id="ua-custom-input" class="el-input__inner" ' +
+                  'placeholder="留空则使用客户端默认UA" ' +
+                  'value="' + savedUA.replace(/"/g, "&quot;") + '" ' +
+                  'style="flex:1;height:36px;" />' +
+              '</div>' +
+            '</div>';
+
+          remoteFormItem.parentNode.insertBefore(uaDiv, remoteFormItem.nextSibling);
+
+          // 预设选择事件
+          document.getElementById("ua-preset-select").addEventListener("change", function () {
+            var val = this.value;
+            if (val) {
+              document.getElementById("ua-custom-input").value = val;
+              saveCustomUA(val);
+            }
+          });
+
+          // 输入框保存事件
+          document.getElementById("ua-custom-input").addEventListener("input", function () {
+            saveCustomUA(this.value);
+          });
+        }
+      }
+    }
+
+    // 3. 替换远程配置
     var app = document.getElementById("app");
     if (app && app.__vue__) {
       var vm = app.__vue__;
-      // 遍历组件树找到有 remoteConfig 的组件
-      function findAndPatch(component) {
-        if (component.options && component.options.data) {
-          try {
-            var data = typeof component.options.data === "function"
-              ? component.options.data() : component.options.data;
-            if (data && data.options && data.options.remoteConfig) {
-              // 直接修改 data 选项
-              component.options.data = function () {
-                var d = typeof component.options.data === "function"
-                  ? component.options.data() : {};
-                d.options = d.options || {};
-                d.options.remoteConfig = ACL4SSR_CONFIGS;
-                return d;
-              };
-              return true;
-            }
-          } catch (e) {}
-        }
-        return false;
-      }
-
-      // 遍历所有子组件
-      function walkTree(comp) {
-        if (findAndPatch(comp)) return;
-        if (comp.$children) {
-          comp.$children.forEach(walkTree);
-        }
-      }
-      walkTree(vm);
-
-      // 同时修改当前运行中的实例
       function patchRunning(comp) {
         if (comp.$data && comp.$data.options && comp.$data.options.remoteConfig) {
           comp.$data.options.remoteConfig = ACL4SSR_CONFIGS;
@@ -132,9 +180,39 @@
       }
       patchRunning(vm);
     }
+
+    // 4. 拦截生成的订阅链接，注入 ua 参数
+    interceptSubUrl();
   }
 
-  // 多次尝试补丁（Vue 渲染需要时间）
+  // ---- 拦截订阅链接生成，自动追加 ua 参数 ----
+  function interceptSubUrl() {
+    // 监听输出框的变化，追加 ua 参数
+    var observer = new MutationObserver(function () {
+      var ua = getCustomUA();
+      if (!ua) return;
+
+      // 找到输出框（disabled 的 input 或 textarea）
+      var outputs = document.querySelectorAll("input[disabled], textarea[disabled]");
+      outputs.forEach(function (el) {
+        var val = el.value;
+        if (val && val.indexOf("/sub?") !== -1 && val.indexOf("ua=") === -1) {
+          el.value = val + "&ua=" + encodeURIComponent(ua);
+          // 触发 Vue 的数据同步
+          var event = new Event("input", { bubbles: true });
+          el.dispatchEvent(event);
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+  }
+
+  // ---- 延迟执行 ----
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       setTimeout(patch, 500);
