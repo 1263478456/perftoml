@@ -1,0 +1,19 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+LICENSE
+*.md
+
+# Environment
+.env
+.env.*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo

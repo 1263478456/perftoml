@@ -1,0 +1,62 @@
+# ============================================================
+#  订阅转换服务
+#  All-in-One 模式：一条命令搞定
+#  也支持分拆模式（见下方注释）
+# ============================================================
+
+version: '3.8'
+
+services:
+  # ==========================================================
+  #  方式一：All-in-One（推荐）
+  #  subconverter + sub-web + Nginx 打包在一个镜像里
+  # ==========================================================
+  sub-converter:
+    image: 1263478456/sub-converter:latest
+    container_name: sub-converter
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:80"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+
+  # ==========================================================
+  #  方式二：分拆模式（取消注释使用，同时注释上方 All-in-One）
+  # ==========================================================
+  # subconverter:
+  #   image: tindy2013/subconverter:latest
+  #   container_name: subconverter
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3215:25500"
+  #   volumes:
+  #     - ./subconverter/pref.ini:/base/pref.ini:ro
+  #   networks:
+  #     - sub-network
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:25500/version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 10s
+  #
+  # subweb:
+  #   image: careywong/subweb:latest
+  #   container_name: subweb
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3216:80"
+  #   environment:
+  #     - VITE_SUBCONVERTER_DEFAULT_BACKEND=http://subconverter:25500
+  #   depends_on:
+  #     subconverter:
+  #       condition: service_healthy
+  #   networks:
+  #     - sub-network
+  #
+  # networks:
+  #   sub-network:
+  #     driver: bridge
